@@ -1,21 +1,16 @@
 const fs = require('fs');
 const path = require('path');
-let f = fs.readFileSync('indice_mesas2.json');
+let f = fs.readFileSync(process.argv[2]);
 let current = JSON.parse(f);
 
 const createCsvWriter = require('csv-writer').createObjectCsvWriter;
+var header=[];
+for (var key of Object.keys(current[0])) {
+    header.push({id:key,title:key});
+}
 const csvWriterCurrent = createCsvWriter({
-    path: 'salida_indice2.csv',
-    header: [
-	{id: 'COMUNA', title: 'COMUNA'},
-	{id: 'C_COMUNA', title: 'COD. COMUNA'},
-	{id: 'CIRC_ELEC', title: 'CIRC. ELECT.'},
-	{id: 'C_CIRC_ELEC', title: 'COD. CIRC. ELECT.'},
-	{id: 'LOCAL', title: 'LOCAL'},
-	{id: 'C_LOCAL', title: 'COD. LOCAL'},
-	{id: 'MESA', title: 'MESA'},
-	{id: 'C_MESA', title: 'COD. MESA'}
-    ]
+    path: process.argv[3],
+    header: header
 });
 csvWriterCurrent.writeRecords(current)       // returns a promise
     .then(() => {
